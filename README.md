@@ -75,6 +75,105 @@ hammy --help
 ```
 
 ---
+# 🤖 AI Features Setup
+
+Hammy's AI-powered features (`generate`, `review`, and `explain`) require a free **Groq API Key**.
+
+## Step 1: Create a Groq Account
+
+Visit:
+
+👉 https://console.groq.com
+
+Sign up or log in to your account.
+
+---
+
+## Step 2: Generate an API Key
+
+Navigate to:
+
+👉 https://console.groq.com/keys
+
+Click **Create API Key** and copy the generated key.
+
+It will look similar to:
+
+```text
+gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+---
+
+## Step 3: Set the API Key
+
+### Windows PowerShell
+
+```powershell
+$env:GROQ_API_KEY="gsk_your_api_key"
+```
+
+### Windows Command Prompt
+
+```cmd
+set GROQ_API_KEY=gsk_your_api_key
+```
+
+### Linux / macOS
+
+```bash
+export GROQ_API_KEY="gsk_your_api_key"
+```
+
+---
+
+## Step 4: Verify the Setup
+
+Run any AI command:
+
+```bash
+hammy generate "Create a login API"
+```
+
+If everything is configured correctly, Hammy will generate an API request using Groq AI.
+
+---
+
+## AI Commands
+
+Generate a request
+
+```bash
+hammy generate "Get all users"
+```
+
+Review an API
+
+```bash
+hammy review GET https://dummyjson.com/users
+```
+
+Explain an API response
+
+```bash
+hammy explain GET https://dummyjson.com/users
+```
+
+---
+
+> **Note**
+>
+> The following commands **do not require a Groq API key**:
+>
+> - `run`
+> - `save`
+> - `list`
+> - `edit`
+> - `delete`
+> - `collection`
+>
+> Only the AI-powered commands (`generate`, `review`, and `explain`) require a Groq API key.
+
 
 # ⚙️ Environment Variables
 
