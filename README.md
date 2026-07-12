@@ -90,7 +90,3 @@ Usage:
 • Run 'hammy <command> --help' for command-specific help.
 
 ------------------------------------------------
-`);
-  });
-
-export default helpCommand;
