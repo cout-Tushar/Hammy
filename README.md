@@ -1,92 +1,359 @@
+# 🐹 Hammy
 
-🐹 Hammy CLI — AI-Powered API Development Assistant
-==================================================
+<p align="center">
+  <b>AI-Powered API Development Assistant for the Terminal</b>
+</p>
 
-Usage:
-  hammy <command> [options]
+<p align="center">
+  Generate, test, save, review, explain, and organize APIs without leaving your terminal.
+</p>
 
-------------------------------------------------
-🚀 API Commands
-------------------------------------------------
-  run <method> <url>            Run an API request
-  run <id>                      Run a saved request
+<p align="center">
 
-  save <method> <url>           Save an API request
-  list                          List saved requests
-  edit <id>                     Edit a saved request
-  delete <id>                   Delete a saved request
+![npm](https://img.shields.io/npm/v/tushar_hammy)
+![License](https://img.shields.io/npm/l/tushar_hammy)
+![Downloads](https://img.shields.io/npm/dm/tushar_hammy)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
+![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)
 
-------------------------------------------------
-📦 Collection Commands
-------------------------------------------------
-  collection create <name>                  Create a collection
-  collection list                           List all collections
-  collection add <collectionId> <requestId> Add request to collection
-  collection run <collectionId>             Run all requests in a collection
+</p>
 
-------------------------------------------------
-🤖 AI Commands
-------------------------------------------------
-  generate "<prompt>"          Generate an API request
-  generate --save              Generate and save request
-  generate --run               Generate and execute request
-  generate --save --run        Generate, save, and execute
+---
 
-  review <method> <url>        AI review of an API
-  explain <method> <url>       AI explanation of an API response
+## ✨ Features
 
-------------------------------------------------
-⚙️ Options
-------------------------------------------------
-  -H, --header <key:value>     Add request headers
-  -d, --data <data>            Add request body (JSON or key=value)
+### 🚀 Request Management
 
-------------------------------------------------
-📘 Examples
-------------------------------------------------
+- Execute HTTP requests (GET, POST, PUT, PATCH, DELETE)
+- Custom headers support
+- JSON request body support
+- Execute saved requests
+- Works with both local and remote APIs
 
-1️⃣ Run a GET request
-  hammy run GET https://dummyjson.com/users
+### 💾 Save Requests
 
-2️⃣ POST request with JSON body
-  hammy run POST https://jsonplaceholder.typicode.com/users \\
-      -H "Content-Type:application/json" \\
-      -d '{ "name": "Tushar" }'
+- Save API requests
+- List saved requests
+- Edit saved requests
+- Delete saved requests
+- Reuse requests instantly
 
-3️⃣ Save a request
-  hammy save GET https://dummyjson.com/users
+### 📦 Collections
 
-4️⃣ Execute a saved request
-  hammy run 1
+Organize related APIs into reusable collections.
 
-5️⃣ Generate an API request
-  hammy generate "Get all users"
+- Create collections
+- List collections
+- Add requests to collections
+- Execute an entire collection with one command
 
-6️⃣ Generate and execute
-  hammy generate "Create login API" --run
+### 🤖 AI-Powered Features
 
-7️⃣ Review an API
-  hammy review GET https://dummyjson.com/users
+Generate API requests using natural language.
 
-8️⃣ Explain an API
-  hammy explain GET https://dummyjson.com/users
+Review APIs for:
 
-9️⃣ Create a collection
-  hammy collection create "User APIs"
+- 🔒 Security issues
+- ⚡ Performance improvements
+- 📘 REST best practices
+- 📝 Documentation suggestions
 
-🔟 Add a request to a collection
-  hammy collection add 1 2
+Explain any API response in simple English.
 
-1️⃣1️⃣ Run a collection
-  hammy collection run 1
+---
 
-------------------------------------------------
-💡 Tips
-------------------------------------------------
-• Save frequently used APIs and organize them into collections.
-• AI-generated requests may require small adjustments.
-• Use JSON for complex request bodies.
-• Use local APIs (localhost) during development.
-• Run 'hammy <command> --help' for command-specific help.
+# 📦 Installation
 
-------------------------------------------------
+```bash
+npm install -g tushar_hammy
+```
+
+Verify installation
+
+```bash
+hammy --help
+```
+
+---
+
+# ⚙️ Environment Variables
+
+Create a `.env` file.
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+---
+
+# 🚀 Usage
+
+## Run an API
+
+```bash
+hammy run GET https://dummyjson.com/users
+```
+
+Run a saved request
+
+```bash
+hammy run 1
+```
+
+---
+
+## Save a Request
+
+```bash
+hammy save GET https://dummyjson.com/users
+```
+
+List saved requests
+
+```bash
+hammy list
+```
+
+Edit a request
+
+```bash
+hammy edit 1
+```
+
+Delete a request
+
+```bash
+hammy delete 1
+```
+
+---
+
+# 📦 Collections
+
+Create a collection
+
+```bash
+hammy collection create "User APIs"
+```
+
+List collections
+
+```bash
+hammy collection list
+```
+
+Add a request
+
+```bash
+hammy collection add 1 2
+```
+
+Run an entire collection
+
+```bash
+hammy collection run 1
+```
+
+---
+
+# 🤖 AI Commands
+
+## Generate an API Request
+
+```bash
+hammy generate "Get all users"
+```
+
+Generate and execute
+
+```bash
+hammy generate "Create login API" --run
+```
+
+Generate and save
+
+```bash
+hammy generate "Create user endpoint" --save
+```
+
+Generate, save and execute
+
+```bash
+hammy generate "Create login API" --save --run
+```
+
+---
+
+## Review an API
+
+```bash
+hammy review GET https://dummyjson.com/users
+```
+
+Hammy analyzes:
+
+- Security
+- REST Best Practices
+- Performance
+- Documentation
+
+---
+
+## Explain an API
+
+```bash
+hammy explain GET https://dummyjson.com/users
+```
+
+Hammy explains:
+
+- What the endpoint does
+- Request structure
+- Response fields
+- Possible use cases
+- Suggestions for improvement
+
+---
+
+# 📖 Examples
+
+### GET Request
+
+```bash
+hammy run GET https://dummyjson.com/users
+```
+
+### POST Request
+
+```bash
+hammy run POST https://dummyjson.com/users/add \
+-H "Content-Type:application/json" \
+-d '{ "name":"Tushar", "role":"Developer" }'
+```
+
+### AI Generate
+
+```bash
+hammy generate "Create Login API"
+```
+
+### Review
+
+```bash
+hammy review GET https://dummyjson.com/users
+```
+
+### Explain
+
+```bash
+hammy explain GET https://dummyjson.com/users
+```
+
+---
+
+# 📁 Project Structure
+
+```text
+src
+│
+├── commands
+│   ├── collection.ts
+│   ├── delete.ts
+│   ├── edit.ts
+│   ├── explain.ts
+│   ├── generate.ts
+│   ├── help.ts
+│   ├── list.ts
+│   ├── review.ts
+│   ├── run.ts
+│   └── save.ts
+│
+├── config
+│   └── env.ts
+│
+├── services
+│   ├── aiService.ts
+│   ├── collectionStore.ts
+│   ├── requestBuilder.ts
+│   ├── requestService.ts
+│   └── storageService.ts
+│
+├── types
+│
+├── utils
+│
+└── index.ts
+```
+
+---
+
+# 🛠️ Built With
+
+- TypeScript
+- Node.js
+- Commander.js
+- Axios
+- Groq AI
+
+---
+
+# 🚀 Roadmap
+
+## ✅ Completed
+
+- HTTP Request Execution
+- Save Requests
+- Edit Requests
+- Delete Requests
+- Collections
+- Collection Runner
+- AI Request Generation
+- AI API Review
+- AI Response Explanation
+- Global npm Package
+
+## 🚧 Coming Soon
+
+- AI Documentation Generator
+- AI Security Audit
+- Environment Profiles
+- Request History
+- Response Comparison
+- Export Reports (Markdown/HTML)
+
+---
+
+# 💡 Why Hammy?
+
+During backend development, developers constantly switch between:
+
+- Postman
+- Terminal
+- Browser
+- AI Chatbots
+
+Hammy brings everything together into a single terminal experience, allowing developers to generate, test, review, understand, and organize APIs without leaving the command line.
+
+---
+
+# 🤝 Contributing
+
+Contributions, issues, and feature requests are always welcome.
+
+If you'd like to improve Hammy, feel free to fork the repository and submit a Pull Request.
+
+---
+
+# 📄 License
+
+MIT License
+
+---
+
+# 👨‍💻 Author
+
+**Tushar Mishra**
+
+⭐ If you found Hammy useful, consider starring the repository!
+
+GitHub: https://github.com/cout-Tushar/Hammy
