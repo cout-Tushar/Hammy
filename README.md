@@ -1,9 +1,4 @@
-import { Command } from "commander";
 
-const helpCommand = new Command("help")
-  .description("Show help for Hammy CLI")
-  .action((): void => {
-    console.log(`
 🐹 Hammy CLI — AI-Powered API Development Assistant
 ==================================================
 
