@@ -62,7 +62,7 @@ const editCommand = new Command("edit")
 
         writeData(data);
 
-        console.log(`✅ Request with ID ${id} updated successfully.`);
+        console.log(`Request with ID ${id} updated successfully.`);
     });
 
 export default editCommand;

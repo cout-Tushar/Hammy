@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.toHttpMethod = toHttpMethod;
 const METHODS = [
     "GET",
     "POST",
@@ -8,7 +5,7 @@ const METHODS = [
     "PATCH",
     "DELETE"
 ];
-function toHttpMethod(method) {
+export function toHttpMethod(method) {
     const upper = method.toUpperCase();
     if (METHODS.includes(upper)) {
         return upper;

@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = require("commander");
-const storage_js_1 = require("../utils/storage.js");
-const htttps_js_1 = require("../utils/htttps.js");
+import { Command } from "commander";
+import { readData, writeData } from "../utils/storage.js";
+import { toHttpMethod } from "../utils/htttps.js";
 const parseHeaders = (headerArgs) => {
     const headers = {};
     if (!headerArgs)
@@ -56,25 +54,25 @@ const parseDataArg = (dataArgs) => {
     }
     return obj;
 };
-const saveCommand = new commander_1.Command('save')
+const saveCommand = new Command('save')
     .description("Save API request configuration for future use")
     .argument('<method>')
     .argument('<url>')
     .option('-H, --header <header...>', 'Add custom header, e.g. -H "Content-Type: application/json"')
     .option('-d, --data <data...>', 'Add request body (JSON or key=value pairs)')
     .action((method, url, options) => {
-    const data = (0, storage_js_1.readData)();
+    const data = readData();
     const parsedHeader = parseHeaders(options.header);
     const parsedBody = parseDataArg(options.data);
     const newRequest = {
         id: data.length + 1,
-        method: (0, htttps_js_1.toHttpMethod)(method),
+        method: toHttpMethod(method),
         url,
         headers: parsedHeader,
         body: parsedBody,
     };
     data.push(newRequest);
-    (0, storage_js_1.writeData)(data);
+    writeData(data);
     console.log(`Saved request: ${newRequest.method} ${url} with id ${newRequest.id}`);
 });
-exports.default = saveCommand;
+export default saveCommand;

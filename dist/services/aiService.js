@@ -1,24 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateRequest = generateRequest;
-exports.reviewApi = reviewApi;
-exports.explainResponse = explainResponse;
-exports.generateDocumentation = generateDocumentation;
-exports.securityAudit = securityAudit;
-exports.explainApi = explainApi;
-const axios_1 = __importDefault(require("axios"));
+import axios from "axios";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.1-8b-instant";
 async function askAI(prompt) {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-        console.log(apiKey);
         throw new Error("Missing GROQ_API_KEY");
     }
-    const response = await axios_1.default.post(GROQ_URL, {
+    const response = await axios.post(GROQ_URL, {
         model: MODEL,
         messages: [
             {
@@ -42,150 +30,230 @@ function cleanJson(text) {
         .replace(/^Here's.*?:\s*/i, "")
         .trim();
 }
-async function generateRequest(prompt) {
+export async function generateRequest(prompt) {
     const aiPrompt = `
-You MUST return ONLY valid JSON.
+You are a senior backend engineer generating a REST API request.
 
 User Request:
 "${prompt}"
 
-Return ONLY this format:
+Rules:
+- Output ONLY valid JSON. No Markdown, no code fences, no explanations, no extra text before or after.
+- Choose the HTTP method that best matches the user's intent (GET, POST, PUT, PATCH, DELETE).
+- Include realistic, production-quality headers (e.g. "Content-Type", "Accept", "Authorization" when relevant).
+- Include a request body only when the method requires one; use realistic, well-typed sample values.
+- Use a real, plausible endpoint URL following REST conventions (resource-based paths, correct pluralization, path/query params where appropriate).
+
+Return ONLY this exact JSON shape (values filled in, no comments):
 
 {
-    "method":"GET",
-    "url":"https://jsonplaceholder.typicode.com/posts",
-    "headers":{
-        "Content-Type":"application/json"
+    "method": "GET",
+    "url": "https://jsonplaceholder.typicode.com/posts",
+    "headers": {
+        "Content-Type": "application/json"
     },
-    "body":{}
+    "body": {}
 }
 `;
     const result = await askAI(aiPrompt);
-    const cleaned = cleanJson(result);
-    return JSON.parse(cleaned);
+    return JSON.parse(cleanJson(result));
 }
-async function reviewApi(request, response) {
+export async function reviewApi(request, response) {
     const prompt = `
-You are an experienced Backend Engineer.
-
-Review this API.
+You are a Senior Backend Engineer reviewing an API call for another developer reading this in a terminal.
 
 Request:
-
 ${JSON.stringify(request, null, 2)}
 
 Response:
+${JSON.stringify(response.data, null, 2)}
 
-${JSON.stringify(response, null, 2)}
+Return Markdown in EXACTLY this structure:
 
-Give:
+# API Review
 
-1. Security Issues
-2. REST Best Practices
-3. Performance Improvements
-4. Documentation Suggestions
+## Overall Score
+Give a single score out of 10 with a one-line justification.
+
+## Strengths
+- Bullet points only, most important first.
+
+## Issues
+- Bullet points only, most important first. Skip trivial nitpicks.
+
+## Recommendations
+- Bullet points only. Each one must be a concrete, actionable fix.
+
+Rules:
+- Maximum 150 words total.
+- No long paragraphs, no filler, no repetition.
+- Be direct and specific, not generic.
 `;
     return askAI(prompt);
 }
-async function explainResponse(response) {
+export async function explainResponse(response) {
     const prompt = `
-Explain this API response.
-
-${JSON.stringify(response, null, 2)}
-
-Explain it in simple language.
-`;
-    return askAI(prompt);
-}
-async function generateDocumentation(request, response) {
-    const prompt = `
-Generate professional API documentation.
-
-Request
-
-${JSON.stringify(request, null, 2)}
-
-Response
-
-${JSON.stringify(response, null, 2)}
-
-Include:
-
-Endpoint
-
-Method
-
-Headers
-
-Example Request
-
-Example Response
-
-Possible Errors
-`;
-    return askAI(prompt);
-}
-async function securityAudit(request, response) {
-    const prompt = `
-You are an API Security Expert.
-
-Analyze this API.
-
-Request
-
-${JSON.stringify(request, null, 2)}
-
-Response
-
-${JSON.stringify(response, null, 2)}
-
-Check for
-
-Authentication
-
-Authorization
-
-Sensitive Data Exposure
-
-Security Headers
-
-Rate Limiting
-
-Injection Risks
-
-Return a report under 100 words emphasize on criticality.
-`;
-    return askAI(prompt);
-}
-async function explainApi(request, response) {
-    const prompt = `
-You are an experienced Backend Engineer.
-
-Explain this API in simple terms for a developer.
-Keep it under 100 words
-
-Request:
-
-${JSON.stringify(request, null, 2)}
+Explain this API response for a developer, in plain language.
 
 Response:
 
-${JSON.stringify(response, null, 2)}
+${JSON.stringify(response.data, null, 2)}
 
-Explain:
+Return Markdown in EXACTLY this structure:
 
-1. What this API does
-2. HTTP method purpose
-3. Endpoint meaning
-4. Required headers
-5. Request body explanation
-6. Response structure explanation
-7. Possible use cases
-8. Potential improvements
+# Response Explanation
 
-Keep the explanation beginner friendly.
+## What happened
+One or two short lines on the outcome (success/failure, status meaning).
 
-Keep it under 100 words
+## Important fields
+- Bullet the key fields and what each one means.
+
+## What the response means
+A short, plain-language takeaway.
+
+## Common use cases
+- Bullet 1-3 realistic ways a developer would use this data.
+
+Rules:
+- Under 120 words total.
+- Simple language, minimal jargon.
+- No walls of text, no repetition.
+`;
+    return askAI(prompt);
+}
+export async function generateDocumentation(request, response) {
+    const example = Array.isArray(response.data)
+        ? response.data[0]
+        : response.data;
+    const prompt = `
+You are a Senior Backend Engineer writing professional API documentation for other developers.
+
+Request:
+${JSON.stringify(request, null, 2)}
+
+Example Response:
+${JSON.stringify(example, null, 2)}
+
+Return ONLY Markdown in EXACTLY this structure:
+
+# API Documentation
+
+## Endpoint
+
+## Method
+
+## Description
+Infer the purpose of this endpoint from the request and response; keep it to 1-2 sentences.
+
+## Headers
+- List relevant headers and their purpose.
+
+## Request Body
+- Describe expected fields, or state "None" if not applicable.
+
+## Response Schema
+Infer the schema and represent it like this (do NOT dump the full JSON):
+
+ResourceName
+- field: type
+- field: type
+
+Then show exactly ONE example object built from the inferred schema, explain the important fields briefly, list common status codes, and add short developer notes.
+
+Rules:
+- Do NOT dump the entire raw response.
+- Keep the whole document under 500 words.
+- No repetition, no generic filler, terminal-friendly formatting.
+`;
+    return askAI(prompt);
+}
+export async function securityAudit(request, response) {
+    const prompt = `
+You are an API Security Expert performing a security audit for a developer.
+
+Request:
+${JSON.stringify(request, null, 2)}
+
+Response:
+${JSON.stringify(response.data, null, 2)}
+
+Return Markdown in EXACTLY this structure:
+
+# Security Audit
+
+## Overall Risk
+State Low, Medium, or High with a one-line reason.
+
+## Findings
+Use these markers for each finding:
+- ✅ Good
+- ⚠ Warning
+- ❌ Critical
+
+Cover, only where actually observable from the request/response above:
+- HTTPS usage
+- Authentication
+- Authorization
+- Sensitive data exposure
+- Security headers
+- Rate limiting
+- Input validation
+- Injection risks
+
+Never invent a vulnerability that isn't supported by the data. If something cannot be verified from the available information, state exactly: "Cannot be determined from the available information."
+
+## Recommendations
+- List the top improvements in priority order, most critical first.
+
+Rules:
+- Maximum 180 words total.
+- No filler, no repeated points, terminal-friendly formatting.
+`;
+    return askAI(prompt);
+}
+export async function explainApi(request, response) {
+    const prompt = `
+You are an experienced Backend Engineer explaining this API to a beginner developer.
+
+Request:
+${JSON.stringify(request, null, 2)}
+
+Response:
+${JSON.stringify(response.data, null, 2)}
+
+Return Markdown in EXACTLY this structure:
+
+# API Explanation
+
+## Purpose
+One short line on what this API does.
+
+## HTTP Method
+Explain the method used and why it fits this action.
+
+## Endpoint
+Explain what the endpoint path represents.
+
+## Headers
+Explain the key headers in plain terms.
+
+## Request Body
+Explain what's being sent, or state "None" if not applicable.
+
+## Response
+Explain what the response represents (concept, not a re-print of the JSON).
+
+## Typical Use Cases
+- Bullet 1-3 realistic scenarios.
+
+## Tips
+- Bullet 1-2 short, practical tips or possible improvements.
+
+Rules:
+- Under 150 words total.
+- Beginner-friendly language, no unnecessary jargon.
+- Explain concepts; do not just echo the JSON back.
 `;
     return askAI(prompt);
 }

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tryParseJson = exports.parseDataArg = exports.parseHeaders = void 0;
-const parseHeaders = (headerArgs) => {
+export const parseHeaders = (headerArgs) => {
     const headers = {};
     if (!headerArgs)
         return headers;
@@ -14,7 +11,6 @@ const parseHeaders = (headerArgs) => {
     });
     return headers;
 };
-exports.parseHeaders = parseHeaders;
 const normalizeJsonLikeString = (raw) => {
     let normalized = raw.trim();
     // Quote unquoted keys
@@ -30,7 +26,7 @@ const normalizeJsonLikeString = (raw) => {
     });
     return normalized;
 };
-const parseDataArg = (dataArgs) => {
+export const parseDataArg = (dataArgs) => {
     if (!dataArgs)
         return undefined;
     const raw = Array.isArray(dataArgs)
@@ -83,8 +79,7 @@ const parseDataArg = (dataArgs) => {
     }
     return obj;
 };
-exports.parseDataArg = parseDataArg;
-const tryParseJson = (value) => {
+export const tryParseJson = (value) => {
     try {
         return JSON.parse(value);
     }
@@ -92,4 +87,3 @@ const tryParseJson = (value) => {
         return value;
     }
 };
-exports.tryParseJson = tryParseJson;

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.normalizeUrl = exports.isUrl = void 0;
-const isUrl = (value) => {
+export const isUrl = (value) => {
     try {
         new URL(value);
         return true;
@@ -10,8 +7,7 @@ const isUrl = (value) => {
         return false;
     }
 };
-exports.isUrl = isUrl;
-const normalizeUrl = (url) => {
+export const normalizeUrl = (url) => {
     if (url.startsWith("http://") || url.startsWith("https://")) {
         return url;
     }
@@ -29,4 +25,3 @@ const normalizeUrl = (url) => {
     }
     return url;
 };
-exports.normalizeUrl = normalizeUrl;

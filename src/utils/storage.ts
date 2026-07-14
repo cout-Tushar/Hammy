@@ -4,7 +4,7 @@ import path from "path";
 
 import type { ApiRequest } from "../types/request.js";
 
-const dir = path.join(os.homedir(), ".apix");
+const dir = path.join(os.homedir(), ".hammy");
 const file = path.join(dir, "requests.json");
 
 if (!fs.existsSync(dir)) {

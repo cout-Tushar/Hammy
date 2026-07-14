@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import "dotenv/config";
 import { Command } from "commander";
 import explainCommand from "./commands/explain.js";
@@ -12,16 +11,16 @@ import generateCommand from "./commands/generate.js";
 import listCommand from "./commands/list.js";
 import reviewCommand from "./commands/review.js";
 import collectionCommand from "./commands/collection.js";
-
-
+import docsCommand from "./commands/docs.js";
+import auditCommand from "./commands/audit.js";
 
 const program = new Command();
-
 program
   .name("hammy")
   .description("AI-powered API testing tool")
   .version("1.0.1");
 
+program.addCommand(docsCommand);
 program.addCommand(helpCommand);
 program.addCommand(runCommand);
 program.addCommand(saveCommand);
@@ -32,5 +31,6 @@ program.addCommand(listCommand);
 program.addCommand(reviewCommand);
 program.addCommand(explainCommand);
 program.addCommand(collectionCommand);
+program.addCommand(auditCommand);
 
 program.parse();

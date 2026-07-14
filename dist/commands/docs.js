@@ -1,31 +1,29 @@
 import { Command } from "commander";
 import { buildRequest } from "../services/requestBuilder.js";
 import { sendRequest, handleAxiosError, } from "../services/requestService.js";
+import { generateDocumentation } from "../services/aiService.js";
 import { normalizeUrl } from "../utils/url.js";
-const runCommand = new Command("run")
-    .description("Run an API request")
+const docsCommand = new Command("docs")
+    .description("Generate API documentation using AI")
     .argument("[methodOrUrl]", "HTTP Method or Saved Request ID")
     .argument("[url]", "API URL")
-    .usage("[method] <url> [options]")
     .option("-H, --header <header...>", "Add custom headers")
     .option("-d, --data <data...>", "Request body")
     .action(async (methodOrUrl, url, options) => {
     if (!methodOrUrl) {
-        console.error("Usage: hammy run [method] <url> [options]");
+        console.error("Usage: hammy docs [method] <url>");
         return;
     }
     try {
         const request = buildRequest(methodOrUrl, url, options);
         request.url = normalizeUrl(request.url);
         const response = await sendRequest(request);
-        console.log("\n✔ Request Successful");
-        console.log(`Status : ${response.status}`);
-        console.log(`Time   : ${response.time} ms`);
-        console.log(`Size   : ${response.size} bytes\n`);
-        console.log(JSON.stringify(response.data, null, 2));
+        console.log("📚 Generating API documentation...\n");
+        const docs = await generateDocumentation(request, response);
+        console.log(docs);
     }
     catch (error) {
         handleAxiosError(error);
     }
 });
-export default runCommand;
+export default docsCommand;

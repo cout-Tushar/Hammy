@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildRequest = buildRequest;
-const storage_js_1 = require("../utils/storage.js");
-const parser_js_1 = require("../utils/parser.js");
-const url_js_1 = require("../utils/url.js");
-function buildRequest(methodOrUrl, url, options = {}) {
+import { readData } from "../utils/storage.js";
+import { parseHeaders, parseDataArg } from "../utils/parser.js";
+import { isUrl } from "../utils/url.js";
+export function buildRequest(methodOrUrl, url, options = {}) {
     // Run saved request by ID
-    if (!url && !(0, url_js_1.isUrl)(methodOrUrl)) {
-        const savedRequests = (0, storage_js_1.readData)();
+    if (!url && !isUrl(methodOrUrl)) {
+        const savedRequests = readData();
         const saved = savedRequests.find((request) => request.id === Number(methodOrUrl));
         if (!saved) {
             throw new Error(`Request ${methodOrUrl} not found.`);
@@ -17,10 +14,10 @@ function buildRequest(methodOrUrl, url, options = {}) {
             url: saved.url,
             headers: {
                 ...saved.headers,
-                ...(0, parser_js_1.parseHeaders)(options.header)
+                ...parseHeaders(options.header)
             },
             body: options.data
-                ? (0, parser_js_1.parseDataArg)(options.data)
+                ? parseDataArg(options.data)
                 : saved.body
         };
     }
@@ -28,7 +25,7 @@ function buildRequest(methodOrUrl, url, options = {}) {
     return {
         method: (url ? methodOrUrl.toUpperCase() : "GET"),
         url: url ?? methodOrUrl,
-        headers: (0, parser_js_1.parseHeaders)(options.header),
-        body: (0, parser_js_1.parseDataArg)(options.data)
+        headers: parseHeaders(options.header),
+        body: parseDataArg(options.data)
     };
 }

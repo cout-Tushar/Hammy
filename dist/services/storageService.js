@@ -1,19 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllRequests = getAllRequests;
-exports.getRequestById = getRequestById;
-exports.saveRequest = saveRequest;
-exports.updateRequest = updateRequest;
-exports.deleteRequest = deleteRequest;
-const storage_js_1 = require("../utils/storage.js");
-function getAllRequests() {
-    return (0, storage_js_1.readData)();
+import { readData, writeData } from "../utils/storage.js";
+export function getAllRequests() {
+    return readData();
 }
-function getRequestById(id) {
-    return (0, storage_js_1.readData)().find((request) => request.id === id);
+export function getRequestById(id) {
+    return readData().find((request) => request.id === id);
 }
-function saveRequest(request) {
-    const requests = (0, storage_js_1.readData)();
+export function saveRequest(request) {
+    const requests = readData();
     const newRequest = {
         id: requests.length > 0
             ? Math.max(...requests.map(r => r.id)) + 1
@@ -21,11 +14,11 @@ function saveRequest(request) {
         ...request
     };
     requests.push(newRequest);
-    (0, storage_js_1.writeData)(requests);
+    writeData(requests);
     return newRequest;
 }
-function updateRequest(id, updates) {
-    const requests = (0, storage_js_1.readData)();
+export function updateRequest(id, updates) {
+    const requests = readData();
     const index = requests.findIndex(request => request.id === id);
     if (index === -1) {
         return null;
@@ -34,15 +27,15 @@ function updateRequest(id, updates) {
         ...requests[index],
         ...updates
     };
-    (0, storage_js_1.writeData)(requests);
+    writeData(requests);
     return requests[index];
 }
-function deleteRequest(id) {
-    const requests = (0, storage_js_1.readData)();
+export function deleteRequest(id) {
+    const requests = readData();
     const filtered = requests.filter(request => request.id !== id);
     if (filtered.length === requests.length) {
         return false;
     }
-    (0, storage_js_1.writeData)(filtered);
+    writeData(filtered);
     return true;
 }

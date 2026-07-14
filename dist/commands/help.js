@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = require("commander");
-const helpCommand = new commander_1.Command("help")
+import { Command } from "commander";
+const helpCommand = new Command("help")
     .description("Show help for Hammy CLI")
     .action(() => {
     console.log(`
@@ -98,4 +96,4 @@ Usage:
 ------------------------------------------------
 `);
 });
-exports.default = helpCommand;
+export default helpCommand;
